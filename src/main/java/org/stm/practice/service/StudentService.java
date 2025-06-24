@@ -3,6 +3,7 @@ package org.stm.practice.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.stm.practice.entities.Student;
+import org.stm.practice.exceptions.NotFoundException;
 import org.stm.practice.repositories.StudentRepository;
 
 import java.util.Optional;
@@ -24,7 +25,13 @@ public class StudentService {
 
     public Student getStudentById(Long studentId){
         Optional<Student> found = studentRepository.findById(studentId);
-        return found.orElse(null);
+        if(found.isEmpty()){
+            throw new NotFoundException("Student with ID: " + studentId + " was not found.");
+        }
+        return found.get();
+//        return found.orElseThrow(() -> {
+//            return new NotFoundException("Student with ID: " + studentId + "was not found.");
+//        });
     }
 
     public void deleteById(Long studentId){
@@ -33,10 +40,6 @@ public class StudentService {
 
     public Student updateStudent(Student student){
         Student exists = getStudentById(student.getId());
-        //student does not exist
-        if(exists == null){
-            return null;
-        }
         exists.setFirstName(student.getFirstName());
         exists.setLastName(student.getLastName());
         return studentRepository.save(exists);
