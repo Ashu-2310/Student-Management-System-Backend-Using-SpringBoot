@@ -19,7 +19,7 @@ public class StudentController {
 
 //    we can also write like:
 //    @Autowired
-//    private StudentService studentService;
+//    private StudentService studentService; -> known as setter injection. dependency injected after object creation
 
     @Autowired
     public StudentController(StudentService studentService){
